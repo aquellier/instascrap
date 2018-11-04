@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer');
-const fs = require('fs');
 const CREDS = require('./creds');
 
 // Dom Elements
@@ -12,8 +11,44 @@ const userToSearch = 'nicolekidman';
 const searchUser = `https://www.instagram.com/${userToSearch}`;
 // Cannot search followers directly with URL, I get redirected on user's profile
 // const searchFollowers = `https://www.instagram.com/${userToSearch}/followers`;
-const followersWindow = `a[href='/${userToSearch}/followers/']`;
+const followers = `a[href='/${userToSearch}/followers/']`;
 const firstFollower = 'a[class="FPmhX notranslate _0imsa "]';
+
+// Function extractFollower
+function extractFollowers() {
+  const extractedFollowers = document.querySelectorAll('.FPmhX notranslate _0imsa ');
+  const followers = [];
+  for (let element of extractedElements) {
+    followers.push(element.textContent);
+  }
+  return followers;
+}
+
+
+// Scrolling Function
+async function scrapeInfiniteScrollItems(
+  page,
+  extractFollowers,
+  followersTargetCount,
+  scrollDelay = 1000,
+) {
+  let items = [];
+  const scrollable_popup = '.PZuss';
+  console.log('Hello Debug1');
+  try {
+    let previousHeight;
+    while (items.length < followersTargetCount) {
+      items = await page.evaluate(extractFollowers);
+      // Not showing in the browser from, the code is breaking at this point
+      console.log('Hello2');
+      previousHeight = await page.evaluate('scrollable_popup.scrollHeight');
+      await page.evaluate('window.scrollTo(0, scrollable_popup.scrollHeight)');
+      await page.waitForFunction(`scrollable_popup.scrollHeight > ${previousHeight}`);
+      await page.waitFor(scrollDelay);
+    }
+  } catch(e) { }
+  return items;
+}
 
 
 (async() => {
@@ -27,7 +62,7 @@ const firstFollower = 'a[class="FPmhX notranslate _0imsa "]';
   await page.click(usernameInput);
   await page.keyboard.type(CREDS.username);
 
-  // Type password, submit and wait 3 sec
+  // Type password and submit
   await page.click(passwordInput);
   await page.keyboard.type(CREDS.password);
   await page.click(submitButton);
@@ -35,29 +70,18 @@ const firstFollower = 'a[class="FPmhX notranslate _0imsa "]';
 
   // Search User with URL
   await page.goto(searchUser);
-  await page.click(followersWindow);
+  await page.click(followers);
   await page.waitFor(3000);
   await page.screenshot({ path: 'screenshots/insta.png' });
 
   // Pb: each time you launch the programm, the list changes and you get a different
   // list of followers
-  // Edit: Tricky, the same popup renders a list of followers for the profile
+  // Edit: Really tricky, the same popup renders a list of followers for the profile
   // searched (12 profiles) and also suggestions of people to follow (10 profiles)
-  let followersList = await page.evaluate(() => {
-    let followers = [];
-    let elements = document.getElementsByClassName('FPmhX notranslate _0imsa ');
-    for (let element of elements)
-        followers.push(element.textContent);
-      // Take the actual followers and not the suggestions
-      followers.length = 12;
-    return followers;
-  });
-
-  // Print followersList and save in a file
-  console.log(followersList);
-  fs.writeFileSync('./followersList.txt', followersList.join('\n') + '\n');
+  const findFollowers = await scrapeInfiniteScrollItems(page, extractFollowers, 100);
+  console.log(findFollowers);
 
   // Go to first follower profile
-  await page.click(firstFollower);
+  // await page.click(firstFollower);
   // await browser.close();
 })();
