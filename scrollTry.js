@@ -13,17 +13,27 @@ const searchUser = `https://www.instagram.com/${userToSearch}`;
 // const searchFollowers = `https://www.instagram.com/${userToSearch}/followers`;
 const followers = `a[href='/${userToSearch}/followers/']`;
 const firstFollower = 'a[class="FPmhX notranslate _0imsa "]';
+const closeButton = 'button[class="ckWGn"]';
+// const firstPicture = 'div[class="_9AhH0"]';
 
 // Function extractFollower
-function extractFollowers() {
-  const extractedFollowers = document.querySelectorAll('.FPmhX notranslate _0imsa ');
-  const followers = [];
-  for (let element of extractedElements) {
-    followers.push(element.textContent);
-  }
+const extractFollowers = () => {
+  let followers = [];
+  let elements = document.getElementsByClassName('FPmhX notranslate _0imsa ');
+  for (let element of elements)
+      followers.push(element.textContent);
+    // Take the actual followers and not the suggestions
+    // followers.length = 12
   return followers;
 }
 
+const getPictures = () => {
+  let pictures = [];
+  let elements = document.getElementsByClassName("_9AhH0");
+  for (let element of elements)
+      pictures.push(element);
+  return pictures;
+}
 
 // Scrolling Function
 async function scrapeInfiniteScrollItems(
@@ -33,23 +43,24 @@ async function scrapeInfiniteScrollItems(
   scrollDelay = 1000,
 ) {
   let items = [];
-  const scrollable_popup = '.PZuss';
-  console.log('Hello Debug1');
+  // Returns undefined
+  // const scrollBox = await page.evaluate(() => document.body.innerHTML);
+  const scrollBox = await (await (await page.$('.PZuss')).getProperty('scrollHeight')).jsonValue();
   try {
     let previousHeight;
+    console.log(scrollBox);
     while (items.length < followersTargetCount) {
       items = await page.evaluate(extractFollowers);
-      // Not showing in the browser from, the code is breaking at this point
-      console.log('Hello2');
-      previousHeight = await page.evaluate('scrollable_popup.scrollHeight');
-      await page.evaluate('window.scrollTo(0, scrollable_popup.scrollHeight)');
-      await page.waitForFunction(`scrollable_popup.scrollHeight > ${previousHeight}`);
-      await page.waitFor(scrollDelay);
+      // Code breaking at this point
+      // previousHeight = await page.evaluate('scrollBox.scrollHeight');
+      console.log(extractFollowers());
+      // await page.evaluate('scrollBox.scrollTo(0, scrollBox.scrollHeight)');
+      // await page.waitForFunction(`scrollBox.scrollHeight > ${previousHeight}`);
+      // await page.waitFor(scrollDelay);
     }
   } catch(e) { }
   return items;
 }
-
 
 (async() => {
   // headless false for visual debugging in browser
@@ -66,22 +77,27 @@ async function scrapeInfiniteScrollItems(
   await page.click(passwordInput);
   await page.keyboard.type(CREDS.password);
   await page.click(submitButton);
-  await page.waitFor(3000);
+  await page.waitFor(1000);
 
   // Search User with URL
   await page.goto(searchUser);
   await page.click(followers);
-  await page.waitFor(3000);
-  await page.screenshot({ path: 'screenshots/insta.png' });
+  await page.waitFor(1000);
+  // console.log(context.page);
 
   // Pb: each time you launch the programm, the list changes and you get a different
   // list of followers
-  // Edit: Really tricky, the same popup renders a list of followers for the profile
+  // Edit: Tricky, the same popup renders a list of followers for the profile
   // searched (12 profiles) and also suggestions of people to follow (10 profiles)
   const findFollowers = await scrapeInfiniteScrollItems(page, extractFollowers, 100);
   console.log(findFollowers);
+  await page.screenshot({ path: 'screenshots/insta.png' });
 
   // Go to first follower profile
   // await page.click(firstFollower);
+  // pictures = await page.evaluate(getPictures);
+
+  // await page.click(closeButton);
   // await browser.close();
 })();
+
