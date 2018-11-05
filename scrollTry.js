@@ -16,7 +16,9 @@ const firstFollower = 'a[class="FPmhX notranslate _0imsa "]';
 const closeButton = 'button[class="ckWGn"]';
 // const firstPicture = 'div[class="_9AhH0"]';
 
-// Function extractFollower
+// Extract followers from a user profile
+// Edit: Tricky, the same popup renders a list of followers for the profile
+// searched (12 profiles) and also suggestions of people to follow (10 profiles)
 const extractFollowers = () => {
   let followers = [];
   let elements = document.getElementsByClassName('FPmhX notranslate _0imsa ');
@@ -27,13 +29,14 @@ const extractFollowers = () => {
   return followers;
 }
 
-const getPictures = () => {
-  let pictures = [];
-  let elements = document.getElementsByClassName("_9AhH0");
-  for (let element of elements)
-      pictures.push(element);
-  return pictures;
-}
+// GetPictures on a followerpage
+// const getPictures = () => {
+//   let pictures = [];
+//   let elements = document.getElementsByClassName("_9AhH0");
+//   for (let element of elements)
+//       pictures.push(element);
+//   return pictures;
+// }
 
 // Scrolling Function
 async function scrapeInfiniteScrollItems(
@@ -43,22 +46,20 @@ async function scrapeInfiniteScrollItems(
   scrollDelay = 1000,
 ) {
   let items = [];
+  // const scrollBox = await page.evaluate(() => document.querySelector('.PZuss'));
   // Returns undefined
-  // const scrollBox = await page.evaluate(() => document.body.innerHTML);
-  const scrollBox = await (await (await page.$('.PZuss')).getProperty('scrollHeight')).jsonValue();
-  try {
-    let previousHeight;
-    console.log(scrollBox);
+  let scrollBoxHeight;
     while (items.length < followersTargetCount) {
       items = await page.evaluate(extractFollowers);
-      // Code breaking at this point
-      // previousHeight = await page.evaluate('scrollBox.scrollHeight');
-      console.log(extractFollowers());
+      // The following line gives me the original size of the popup scroll Window
+      scrollBoxHeight = await (await (await page.$('.PZuss')).getProperty('scrollHeight')).jsonValue();
+      console.log(items);
+      console.log(scrollBox);
+      // Still not able to grab the scrollBox itself
       // await page.evaluate('scrollBox.scrollTo(0, scrollBox.scrollHeight)');
-      // await page.waitForFunction(`scrollBox.scrollHeight > ${previousHeight}`);
+      // await page.waitForFunction(`scrollBoxHeight > ${previousHeight}`);
       // await page.waitFor(scrollDelay);
     }
-  } catch(e) { }
   return items;
 }
 
@@ -77,18 +78,16 @@ async function scrapeInfiniteScrollItems(
   await page.click(passwordInput);
   await page.keyboard.type(CREDS.password);
   await page.click(submitButton);
-  await page.waitFor(1000);
+  await page.waitFor(2000);
 
   // Search User with URL
   await page.goto(searchUser);
   await page.click(followers);
-  await page.waitFor(1000);
+  await page.waitFor(2000);
   // console.log(context.page);
 
   // Pb: each time you launch the programm, the list changes and you get a different
   // list of followers
-  // Edit: Tricky, the same popup renders a list of followers for the profile
-  // searched (12 profiles) and also suggestions of people to follow (10 profiles)
   const findFollowers = await scrapeInfiniteScrollItems(page, extractFollowers, 100);
   console.log(findFollowers);
   await page.screenshot({ path: 'screenshots/insta.png' });
