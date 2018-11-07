@@ -52,7 +52,7 @@ async function scrapeInfiniteScrollItems(
     while (items.length < followersTargetCount) {
       items = await page.evaluate(extractFollowers);
       // The following line gives me the original size of the popup scroll Window
-      scrollBoxHeight = await (await (await page.$('.PZuss')).getProperty('scrollHeight')).jsonValue();
+      scrollBoxHeight = await (await page.$('.PZuss')).getProperty('scrollHeight');
       console.log(items);
       console.log(scrollBox);
       // Still not able to grab the scrollBox itself
