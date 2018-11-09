@@ -14,7 +14,7 @@ const params = {
   images_file: fs.createReadStream('screenshots/man_35.png')
 };
 
-function person(ageMin, ageMax, ageProbability, gender, genderProbability){
+function user(ageMin, ageMax, ageProbability, gender, genderProbability){
   this.ageMin = ageMin;
   this.ageMax = ageMax;
   this.ageProbability = ageProbability;
@@ -32,7 +32,7 @@ visualRecognition.detectFaces(params, function(err, res) {
     const ageProbability = faceInfos.age.score
     const gender = faceInfos.gender.gender
     const genderProbability = faceInfos.gender.score
-    const userInfos = new person(ageMin, ageMax, ageProbability, gender, genderProbability);
+    const userInfos = new user(ageMin, ageMax, ageProbability, gender, genderProbability);
 
     console.log(userInfos);
   }
