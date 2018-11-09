@@ -33,7 +33,6 @@ visualRecognition.detectFaces(params, function(err, res) {
     const gender = faceInfos.gender.gender
     const genderProbability = faceInfos.gender.score
     const userInfos = new user(ageMin, ageMax, ageProbability, gender, genderProbability);
-
     console.log(userInfos);
   }
 });
