@@ -14,10 +14,26 @@ const params = {
   images_file: fs.createReadStream('screenshots/man_35.png')
 };
 
+function person(ageMin, ageMax, ageProbability, gender, genderProbability){
+  this.ageMin = ageMin;
+  this.ageMax = ageMax;
+  this.ageProbability = ageProbability;
+  this.gender = gender;
+  this.genderProbability = genderProbability;
+}
+
 visualRecognition.detectFaces(params, function(err, res) {
   if (err) {
     console.log(err);
   } else {
-    console.log(JSON.stringify(res, null, 2));
+    const faceInfos = res.images[0].faces[0]
+    const ageMin = faceInfos.age.min
+    const ageMax = faceInfos.age.max
+    const ageProbability = faceInfos.age.score
+    const gender = faceInfos.gender.gender
+    const genderProbability = faceInfos.gender.score
+    const userInfos = new person(ageMin, ageMax, ageProbability, gender, genderProbability);
+
+    console.log(userInfos);
   }
 });
