@@ -15,7 +15,6 @@ const searchUser = `https://www.instagram.com/${userToSearch}`;
 const followersWindow = `a[href='/${userToSearch}/followers/']`;
 const firstFollower = 'a[class="FPmhX notranslate _0imsa "]';
 
-
 (async() => {
   // headless false for visual debugging in browser
   const browser = await puppeteer.launch({
@@ -37,7 +36,6 @@ const firstFollower = 'a[class="FPmhX notranslate _0imsa "]';
   await page.goto(searchUser);
   await page.click(followersWindow);
   await page.waitFor(3000);
-  await page.screenshot({ path: 'screenshots/insta.png' });
 
   // Pb: each time you launch the programm, the list changes and you get a different
   // list of followers
@@ -49,7 +47,7 @@ const firstFollower = 'a[class="FPmhX notranslate _0imsa "]';
     for (let element of elements)
         followers.push(element.textContent);
       // Take the actual followers and not the suggestions
-      followers.length = 12;
+      // followers.length = 12;
     return followers;
   });
 
@@ -59,5 +57,8 @@ const firstFollower = 'a[class="FPmhX notranslate _0imsa "]';
 
   // Go to first follower profile
   await page.click(firstFollower);
+  // await page.click(firstPicture);
+  await screenshotDOMElement(page, '_6q-tv', 16);
+  // await page.screenshot({ path: 'screenshots/insta.png' });
   // await browser.close();
 })();

@@ -25,7 +25,7 @@ const extractFollowers = () => {
   for (let element of elements)
       followers.push(element.textContent);
     // Take the actual followers and not the suggestions
-    // followers.length = 12
+    // followers.length = 12;
   return followers;
 }
 
@@ -46,22 +46,25 @@ async function scrapeInfiniteScrollItems(
   scrollDelay = 1000,
 ) {
   let items = [];
-  // const scrollBox = await page.evaluate(() => document.querySelector('.PZuss'));
-  // Returns undefined
-  let scrollBoxHeight;
+  let scrollBoxHeight = await page.$eval('.PZuss', el => el.scrollHeight);
+  console.log(scrollBoxHeight);
+  try {
+    let previousHeight;
     while (items.length < followersTargetCount) {
       items = await page.evaluate(extractFollowers);
-      // The following line gives me the original size of the popup scroll Window
-      scrollBoxHeight = await (await page.$('.PZuss')).getProperty('scrollHeight');
-      console.log(items);
-      console.log(scrollBox);
-      // Still not able to grab the scrollBox itself
-      // await page.evaluate('scrollBox.scrollTo(0, scrollBox.scrollHeight)');
-      // await page.waitForFunction(`scrollBoxHeight > ${previousHeight}`);
+      // Not showing in the browser from, the code is breaking at this point
+      // previousHeight = await page.evaluate(() => document.querySelector('.PZuss'));
+      // Returns undefined
+      console.log(extractFollowers());
+      // await page.evaluate('scrollable_popup.scrollTo(0, scrollable_popup.scrollHeight)');
+      // await page.waitForFunction(`scrollable_popup.scrollHeight > ${previousHeight}`);
       // await page.waitFor(scrollDelay);
     }
+  } catch(e) { }
   return items;
 }
+
+
 
 (async() => {
   // headless false for visual debugging in browser
