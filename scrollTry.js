@@ -46,15 +46,17 @@ async function scrapeInfiniteScrollItems(
   scrollDelay = 1000,
 ) {
   let items = [];
+  // Next 2 lines return undefined
+  // .isgrP and .PZuss are classes inside this div, PZuss is the one we want to scroll on
+  let scrollBox1 = await page.$eval('.isgrP', el => el.querySelector('.PZuss'));
+  // or
+  let scrollBox2 = await page.$eval('.PZuss', el => el);
+
   let scrollBoxHeight = await page.$eval('.PZuss', el => el.scrollHeight);
   console.log(scrollBoxHeight);
   try {
-    let previousHeight;
     while (items.length < followersTargetCount) {
       items = await page.evaluate(extractFollowers);
-      // Not showing in the browser from, the code is breaking at this point
-      // previousHeight = await page.evaluate(() => document.querySelector('.PZuss'));
-      // Returns undefined
       console.log(extractFollowers());
       // await page.evaluate('scrollable_popup.scrollTo(0, scrollable_popup.scrollHeight)');
       // await page.waitForFunction(`scrollable_popup.scrollHeight > ${previousHeight}`);
