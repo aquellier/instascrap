@@ -7,10 +7,7 @@ const visualRecognition = new VisualRecognitionV3({
   version: '2018-06-11'
 });
 
-const params = {
-  // An image file (.jpg, .png) or .zip file with images
-  images_file: fs.createReadStream('screenshots/man_35.png')
-};
+const params = { images_file: fs.createReadStream('screenshots/man_35.png') };
 
 function user(ageMin, ageMax, ageProbability, gender, genderProbability){
   this.ageMin = ageMin;
@@ -20,9 +17,10 @@ function user(ageMin, ageMax, ageProbability, gender, genderProbability){
   this.genderProbability = genderProbability;
 }
 
+
 visualRecognition.detectFaces(params, function(err, res) {
   if (err) {
-    console.log(err);
+    console.log("There is an error");
   } else {
     const faceInfos = res.images[0].faces[0]
     const ageMin = faceInfos.age.min
@@ -30,7 +28,11 @@ visualRecognition.detectFaces(params, function(err, res) {
     const ageProbability = faceInfos.age.score
     const gender = faceInfos.gender.gender
     const genderProbability = faceInfos.gender.score
-    const userInfos = new user(ageMin, ageMax, ageProbability, gender, genderProbability);
+    var userInfos = new user(ageMin, ageMax, ageProbability, gender, genderProbability);
     console.log(userInfos);
+    return userInfos;
   }
 });
+
+
+// console.log(userInfos);
