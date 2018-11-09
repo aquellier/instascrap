@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/aquellier/instascrap#readme",
   "dependencies": {
-    "puppeteer": "^1.10.0"
+    "puppeteer": "^1.10.0",
+    "watson-developer-cloud": "^3.13.0"
   }
 }
