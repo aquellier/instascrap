@@ -6,11 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/aquellier/instascrap.git"
-  },
-  "author": "",
+  "repository": "git+https://github.com/aquellier/instascrap.git",
+  "author": "antoinequellier <antoinecquellier@gmail.com>",
   "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/aquellier/instascrap/issues"
@@ -21,8 +18,10 @@
     "watson-developer-cloud": "^3.13.0"
   },
   "devDependencies": {
+    "eslint": "^5.9.0",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.10"
-  }
+  },
+  "private": true
 }

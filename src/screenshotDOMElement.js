@@ -63,8 +63,11 @@ const firstFollower = 'a[class="FPmhX notranslate _0imsa "]';
 
   // Dirty way, clip hardcoded to screenshot profile picture
   await page.screenshot({
-    path: `screenshots/profilepicture.png`,
+    path: `../screenshots/profilepicture.png`,
     clip: {x: 100, y: 130, width: 160, height: 160}
   });
+
+
+
 })();
 

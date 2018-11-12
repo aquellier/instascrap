@@ -39,11 +39,10 @@ function addUserInfos(picture) {
     }
   });
 }
+// usersPictures.forEach((picture) => {
+//   addUserInfos(picture);
+// });
 
-usersPictures.forEach((picture) => {
-  addUserInfos(picture);
-});
-
-setTimeout(() => {
-  console.log(users);
-}, 3000);
+// setTimeout(() => {
+//   console.log(users);
+// }, 3000);
