@@ -48,10 +48,11 @@ async function scrapeInfiniteScrollItems(
   let items = [];
   // Next 2 lines return undefined
   // .isgrP and .PZuss are classes inside this div, PZuss is the one we want to scroll on
-  let scrollBox1 = await page.$eval('.isgrP', el => el.querySelector('.PZuss'));
+  let scrollBox1 = await page.$eval('.isgrP', el => el.querySelector('body > div:nth-child(15) > div > div > div.isgrP > ul > div'));
   // or
-  let scrollBox2 = await page.$eval('.PZuss', el => el);
+  let scrollBox2 = await page.$eval('body > div:nth-child(15) > div > div > div.isgrP > ul > div', el => el);
 
+  console.log(scrollBox2);
   let scrollBoxHeight = await page.$eval('.PZuss', el => el.scrollHeight);
   console.log(scrollBoxHeight);
   try {

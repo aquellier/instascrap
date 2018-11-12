@@ -55,10 +55,5 @@ const firstFollower = 'a[class="FPmhX notranslate _0imsa "]';
   console.log(followersList);
   fs.writeFileSync('./followersList.txt', followersList.join('\n') + '\n');
 
-  // Go to first follower profile
-  await page.click(firstFollower);
-  // await page.click(firstPicture);
-  await screenshotDOMElement(page, '_6q-tv', 16);
-  // await page.screenshot({ path: 'screenshots/insta.png' });
   // await browser.close();
 })();

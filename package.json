@@ -19,5 +19,10 @@
   "dependencies": {
     "puppeteer": "^1.10.0",
     "watson-developer-cloud": "^3.13.0"
+  },
+  "devDependencies": {
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
   }
 }
