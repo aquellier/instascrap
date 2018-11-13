@@ -15,7 +15,8 @@
   "homepage": "https://github.com/aquellier/instascrap#readme",
   "dependencies": {
     "puppeteer": "^1.10.0",
-    "watson-developer-cloud": "^3.13.0"
+    "watson-developer-cloud": "^3.13.0",
+    "ws": "^6.1.0"
   },
   "devDependencies": {
     "eslint": "^5.9.0",

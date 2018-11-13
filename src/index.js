@@ -53,7 +53,7 @@ const firstFollower = 'a[class="FPmhX notranslate _0imsa "]';
 
   // Print followersList and save in a file
   console.log(followersList);
-  fs.writeFileSync('./followersList.txt', followersList.join('\n') + '\n');
+  fs.writeFileSync('./textfiles/followersList.txt', followersList.join('\n') + '\n');
 
   // await browser.close();
 })();
