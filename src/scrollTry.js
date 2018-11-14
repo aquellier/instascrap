@@ -1,6 +1,5 @@
 const puppeteer = require('puppeteer');
 const CREDS = require('./creds');
-
 // Dom Elements
 const loginPage = 'https://www.instagram.com/accounts/login/';
 const usernameInput = 'input[name="username"]';
@@ -29,15 +28,6 @@ const extractFollowers = () => {
   return followers;
 }
 
-// GetPictures on a followerpage
-// const getPictures = () => {
-//   let pictures = [];
-//   let elements = document.getElementsByClassName("_9AhH0");
-//   for (let element of elements)
-//       pictures.push(element);
-//   return pictures;
-// }
-
 // Scrolling Function
 async function scrapeInfiniteScrollItems(
   page,
@@ -49,18 +39,20 @@ async function scrapeInfiniteScrollItems(
   // Next 2 lines return undefined
   // .isgrP and .PZuss are classes inside this div, PZuss is the one we want to scroll on
   let scrollBox1 = await page.$eval('.isgrP', el => el.querySelector('body > div:nth-child(15) > div > div > div.isgrP > ul > div'));
-  // or
   let scrollBox2 = await page.$eval('body > div:nth-child(15) > div > div > div.isgrP > ul > div', el => el);
 
-  console.log(scrollBox2);
+  // Next line returns an ElementHandle
+  let scrollBox3 = await page.$('.PZuss');
+
+  console.log(scrollBox3);
   let scrollBoxHeight = await page.$eval('.PZuss', el => el.scrollHeight);
   console.log(scrollBoxHeight);
   try {
     while (items.length < followersTargetCount) {
       items = await page.evaluate(extractFollowers);
       console.log(extractFollowers());
-      // await page.evaluate('scrollable_popup.scrollTo(0, scrollable_popup.scrollHeight)');
-      // await page.waitForFunction(`scrollable_popup.scrollHeight > ${previousHeight}`);
+      // await page.evaluate('scrollBox.scrollTo(0, scrollable_popup.scrollHeight)');
+      // await page.waitForFunction(`scrollBox.scrollHeight > ${previousHeight}`);
       // await page.waitFor(scrollDelay);
     }
   } catch(e) { }
@@ -92,11 +84,9 @@ async function scrapeInfiniteScrollItems(
   await page.waitFor(2000);
   // console.log(context.page);
 
-  // Pb: each time you launch the programm, the list changes and you get a different
-  // list of followers
   const findFollowers = await scrapeInfiniteScrollItems(page, extractFollowers, 100);
   console.log(findFollowers);
-  await page.screenshot({ path: 'screenshots/insta.png' });
+  await page.screenshot({ path: '../screenshots/insta.png' });
 
   // Go to first follower profile
   // await page.click(firstFollower);
