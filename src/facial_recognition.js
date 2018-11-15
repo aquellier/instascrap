@@ -1,11 +1,11 @@
 const VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
 const CREDS = require('./creds');
 const fs = require('fs');
-const usersPictures = ['screenshots/man_35.jpg', 'screenshots/man_50.jpg', 'screenshots/woman_30.jpg', 'screenshots/woman_65.jpg'];
+const usersPictures = ['screenshots/profile0.png', 'screenshots/profile1.png'];
 
 
 let users = [];
-function addUserInfos(picture) {
+const addUserInfos = (picture) => {
   const visualRecognition = new VisualRecognitionV3({
     iam_apikey: CREDS.apikey,
     version: '2018-06-11'
@@ -39,6 +39,7 @@ function addUserInfos(picture) {
     }
   });
 }
+
 usersPictures.forEach((picture) => {
   addUserInfos(picture);
 });
@@ -46,3 +47,5 @@ usersPictures.forEach((picture) => {
 setTimeout(() => {
   console.log(users);
 }, 3000);
+
+export addUserInfos;

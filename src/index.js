@@ -15,16 +15,6 @@ const searchUser = `https://www.instagram.com/${userToSearch}`;
 const followersWindow = `a[href='/${userToSearch}/followers/']`;
 const firstFollower = 'a[class="FPmhX notranslate _0imsa "]';
 
-// GetPictures on a followerpage
-// const getPictures = () => {
-//   let pictures = [];
-//   let elements = document.getElementsByClassName("_9AhH0");
-//   for (let element of elements)
-//       pictures.push(element);
-//   return pictures;
-// }
-
-
 (async() => {
   // headless false for visual debugging in browser
   const browser = await puppeteer.launch({
