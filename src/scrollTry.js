@@ -32,27 +32,17 @@ async function scrapeInfiniteScrollItems(
 ) {
   let items = [];
   // Next line returns undefined
-  const scrollBox = await page.$eval('div.isgrP > ul > div.PZuss', (uiElement) => {
-    return uiElement;
-  });
-  console.log(scrollBox);
-  // Next line returns an ElementHandle
-  const scrollBox2 = await page.$('.PZuss');
-  console.log(scrollBox2);
-
-  let scrollBoxHeight = await page.$eval('.PZuss', el => el.scrollHeight);
-  console.log(scrollBoxHeight);
+  let x;
   try {
     while (items.length < followersTargetCount) {
       items = await page.evaluate(extractFollowers);
-      console.log(extractFollowers());
-      // await page.evaluate('scrollBox.scrollTo(0, scrollable_popup.scrollHeight)');
-      // await page.waitForFunction(`scrollBox.scrollHeight > ${previousHeight}`);
-      // await page.waitFor(scrollDelay);
+      childToSelect = items.length;
+      await page.hover(`div.isgrP > ul > div > li:nth-child(${childToSelect})`);
     }
   } catch(e) { }
   return items;
 }
+
 
 
 
@@ -79,9 +69,9 @@ async function scrapeInfiniteScrollItems(
   await page.waitFor(2000);
   // console.log(context.page);
 
-  const findFollowers = await scrapeInfiniteScrollItems(page, extractFollowers, 100);
+  const findFollowers = await scrapeInfiniteScrollItems(page, extractFollowers, 200);
   console.log(findFollowers);
-  await page.screenshot({ path: '../screenshots/insta.png' });
+  // await page.screenshot({ path: '../screenshots/insta.png' });
 
 
 })();
