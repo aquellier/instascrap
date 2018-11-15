@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const CREDS = require('./creds');
+const fs = require('fs');
 
 // Dom Elements
 const loginPage = 'https://www.instagram.com/accounts/login/';
@@ -69,9 +70,10 @@ async function scrapeInfiniteScrollItems(
   await page.waitFor(2000);
   // console.log(context.page);
 
-  const findFollowers = await scrapeInfiniteScrollItems(page, extractFollowers, 200);
-  console.log(findFollowers);
+  const followersList = await scrapeInfiniteScrollItems(page, extractFollowers, 1000);
+  console.log(followersList);
   // await page.screenshot({ path: '../screenshots/insta.png' });
+  fs.writeFileSync('./textfiles/followersList.txt', followersList.join('\n') + '\n');
 
 
 })();
