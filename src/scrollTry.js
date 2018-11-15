@@ -1,23 +1,18 @@
 const puppeteer = require('puppeteer');
 const CREDS = require('./creds');
+
 // Dom Elements
 const loginPage = 'https://www.instagram.com/accounts/login/';
 const usernameInput = 'input[name="username"]';
 const passwordInput = 'input[name="password"]';
 const submitButton = 'button[type="submit"]';
-// const searchBar = 'input[type="text"]';
 const userToSearch = 'nicolekidman';
 const searchUser = `https://www.instagram.com/${userToSearch}`;
-// Cannot search followers directly with URL, I get redirected on user's profile
-// const searchFollowers = `https://www.instagram.com/${userToSearch}/followers`;
 const followers = `a[href='/${userToSearch}/followers/']`;
 const firstFollower = 'a[class="FPmhX notranslate _0imsa "]';
 const closeButton = 'button[class="ckWGn"]';
-// const firstPicture = 'div[class="_9AhH0"]';
 
 // Extract followers from a user profile
-// Edit: Tricky, the same popup renders a list of followers for the profile
-// searched (12 profiles) and also suggestions of people to follow (10 profiles)
 const extractFollowers = () => {
   let followers = [];
   let elements = document.getElementsByClassName('FPmhX notranslate _0imsa ');
@@ -36,15 +31,15 @@ async function scrapeInfiniteScrollItems(
   scrollDelay = 1000,
 ) {
   let items = [];
-  // Next 2 lines return undefined
-  // .isgrP and .PZuss are classes inside this div, PZuss is the one we want to scroll on
-  let scrollBox1 = await page.$eval('.isgrP', el => el.querySelector('body > div:nth-child(15) > div > div > div.isgrP > ul > div'));
-  let scrollBox2 = await page.$eval('body > div:nth-child(15) > div > div > div.isgrP > ul > div', el => el);
-
+  // Next line returns undefined
+  const scrollBox = await page.$eval('div.isgrP > ul > div.PZuss', (uiElement) => {
+    return uiElement;
+  });
+  console.log(scrollBox);
   // Next line returns an ElementHandle
-  let scrollBox3 = await page.$('.PZuss');
+  const scrollBox2 = await page.$('.PZuss');
+  console.log(scrollBox2);
 
-  console.log(scrollBox3);
   let scrollBoxHeight = await page.$eval('.PZuss', el => el.scrollHeight);
   console.log(scrollBoxHeight);
   try {
@@ -88,11 +83,6 @@ async function scrapeInfiniteScrollItems(
   console.log(findFollowers);
   await page.screenshot({ path: '../screenshots/insta.png' });
 
-  // Go to first follower profile
-  // await page.click(firstFollower);
-  // pictures = await page.evaluate(getPictures);
 
-  // await page.click(closeButton);
-  // await browser.close();
 })();
 
